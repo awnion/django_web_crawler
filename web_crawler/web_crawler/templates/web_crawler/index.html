@@ -14,6 +14,11 @@
                     <h1 class="text-4xl mt-6 text-center font-bold">
                         Web crawler
                     </h1>
+                    <h2
+                        class="text-2xl mt-6 text-center font-bold text-red-400"
+                    >
+                        No sockets yet. Press F5 to refresh.
+                    </h2>
                 </div>
                 <form action="/" method="POST">
                     {% csrf_token %}{% for field in form %}{% if field.errors %}
