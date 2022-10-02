@@ -1,0 +1,10 @@
+.DS_Store
+
+.devcontainer
+.dockerignore
+.editorconfig
+.git/
+.gitignore
+
+*.pyc
+__pycache__

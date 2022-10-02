@@ -1,0 +1,81 @@
+version: "3.8"
+
+services:
+    db:
+        image: postgres:14.5-bullseye
+        environment:
+            POSTGRES_USER: db_user
+            POSTGRES_PASSWORD: db_pass
+            POSTGRES_DB: db_name
+        volumes:
+            - db_volume:/var/lib/postgresql
+        restart: on-failure
+        healthcheck:
+            test: "exit 0" # todo
+
+    redis:
+        image: redis
+
+    demo:
+        build: .
+        entrypoint: bash
+        # WARNING: NOT FOR PRODUCTION
+        command:
+            - -c
+            - |
+              while true; do
+                  sleep 3
+                  /app/web_crawler/manage.py migrate --no-input &&\
+                  /app/web_crawler/manage.py app_superuser &&\
+                  /app/web_crawler/manage.py runserver 0.0.0.0:8000
+              done
+
+        environment:
+            DEBUG: 1
+            DATABASE_URL: "postgres://db_user:db_pass@db/db_name"
+            CELERY_BROKER_URL: "redis://redis:6379/2"
+            CACHE_URL: "redis://redis:6379/4?client_class=django_redis.client.DefaultClient"
+        volumes:
+            - .:/app
+        ports:
+            - "30003:8000"
+        restart: always
+        healthcheck:
+            # use to make it more smart :P
+            test:
+                - CMD
+                - python3
+                - -c
+                - |
+                  import httpx; assert httpx.get("http://localhost:8000").status_code == 200
+            interval: 40s
+            timeout: 3s
+            retries: 5
+            start_period: 30s
+        depends_on:
+            - db
+            - redis
+
+    worker:
+        build: .
+        entrypoint: bash
+        working_dir: /app/web_crawler
+        command:
+            - -c
+            - |
+              celery -A web_crawler worker -l INFO
+
+        environment:
+            DEBUG: 1
+            DATABASE_URL: "postgres://db_user:db_pass@db/db_name"
+            CELERY_BROKER_URL: "redis://redis:6379/2"
+            CACHE_URL: "redis://redis:6379/4?client_class=django_redis.client.DefaultClient"
+        volumes:
+            - .:/app
+        restart: always
+        depends_on:
+            - db
+            - redis
+
+volumes:
+    db_volume:

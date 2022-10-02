@@ -1,0 +1,92 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Web Crawler</title>
+    </head>
+    <body>
+        <div class="flex items-center justify-center">
+            <div class="w-full max-w-lg space-y-12">
+                <div>
+                    <h1 class="text-4xl mt-6 text-center font-bold">
+                        Web crawler
+                    </h1>
+                </div>
+                <form action="/" method="POST">
+                    {% csrf_token %}{% for field in form %}{% if field.errors %}
+                    <div class="text-red-500">{{ field.errors }}</div>
+                    {% endif %}{% endfor %}
+                    <div class="relative">
+                        <input
+                            type="url"
+                            name="url"
+                            class="block p-4 pr-16 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Url"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        >
+                            Go
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="flex">
+            <div class="w-full overflow-hidden my-8 flex-grow overflow-auto">
+                <table class="border-collapse relative w-full border">
+                    <thead>
+                        <tr>
+                            <th
+                                class="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
+                            >
+                                Status (TODO)
+                            </th>
+                            <th
+                                class="columns-3 border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
+                            >
+                                Date
+                            </th>
+                            <th
+                                class="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
+                            >
+                                Url
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in crawls %}
+                        <tr>
+                            <td
+                                class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                            >
+                                {{item.get_status_display}}
+                            </td>
+                            <td
+                                class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                            >
+                                {{item.created_at | naturaltime}}
+                            </td>
+                            <td
+                                class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                            >
+                                <a
+                                    class="text-blue-600"
+                                    target="_blank"
+                                    href="{{item.initial_url}}"
+                                    >{{item.initial_url}}</a
+                                >
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
