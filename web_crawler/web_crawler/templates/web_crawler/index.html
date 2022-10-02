@@ -43,11 +43,6 @@
                     <thead>
                         <tr>
                             <th
-                                class="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
-                            >
-                                Status (TODO)
-                            </th>
-                            <th
                                 class="columns-3 border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
                             >
                                 Date
@@ -60,13 +55,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in crawls %}
+                        {% for item in pages %}
                         <tr>
-                            <td
-                                class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
-                            >
-                                {{item.get_status_display}}
-                            </td>
                             <td
                                 class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
                             >
@@ -78,8 +68,8 @@
                                 <a
                                     class="text-blue-600"
                                     target="_blank"
-                                    href="{{item.initial_url}}"
-                                    >{{item.initial_url}}</a
+                                    href="{{item.url}}"
+                                    >{{item.url}}</a
                                 >
                             </td>
                         </tr>

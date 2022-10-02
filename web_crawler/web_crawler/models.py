@@ -5,8 +5,8 @@ from .tasks import crawl
 
 
 class Crawl(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
 
     initial_url = models.URLField()
 
@@ -39,8 +39,11 @@ class Crawl(models.Model):
 
 
 class Page(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
 
     url = models.URLField(unique=True)
     content_hash = models.TextField(unique=True)
+
+    class Meta:
+        ordering = ('-created_at',)

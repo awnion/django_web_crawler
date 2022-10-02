@@ -17,4 +17,5 @@ def home(request):
     context = {}
     context['form'] = form
     context['crawls'] = Crawl.objects.all()
+    context['pages'] = Page.objects.all()
     return render(request, 'web_crawler/index.html', context)
