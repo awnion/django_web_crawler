@@ -6,8 +6,8 @@
 docker compose up -d --build
 ```
 
-[http://localhost:30003/](Home)
-[http://localhost:30003/admin/](Admin) admin:admin
+- [http://localhost:30003/](Home)
+- [http://localhost:30003/admin/](Admin) admin:admin
 
 ## Todo
 
